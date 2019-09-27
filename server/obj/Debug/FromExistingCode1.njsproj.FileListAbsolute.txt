@@ -1,0 +1,2 @@
+D:\Programming\my-fullstack\server\obj\Debug\FromExistingCode1.njsprojAssemblyReference.cache
+D:\Programming\my-fullstack\server\bin\Microsoft.NodejsTools.WebRole.dll
