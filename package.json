@@ -2,10 +2,10 @@
   "name": "my-fullstack",
   "version": "1.0.0",
   "description": "",
-  "main": "./client/src/index.js",
+  "main": "index.js",
   "scripts": {
-    "postinstall": "cd ./server && npm install && cd ../client && npm install",
-    "start": "concurrently \"cd server && node index.js\" \"cd client && npm start\""
+    "postinstall": "cd ./server && npm install && cd ../client && npm install && cd client && npm start",
+    "start": "concurrently \"cd server && node index.js && \""
   },
   "repository": {
     "type": "git",
