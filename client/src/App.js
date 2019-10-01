@@ -136,6 +136,9 @@ console.log(copleatList)
           );
         })
       }
+      <div className="moreinfo">
+        <b><p>Total Number of records: {copleatList.length}</p></b>
+      </div>
     </div>
   )
 }
