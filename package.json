@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "cd ./server && npm install && cd ../client && npm install && npm start",
-    "start": "concurrently \"cd server && node index.js && \""
+
+    "start": "concurrently \"cd server && nodemon index.js\" \"cd client && npm start\""
   },
   "repository": {
     "type": "git",

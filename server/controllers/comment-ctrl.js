@@ -35,7 +35,7 @@ createComment = (req, res) => {
 
 updateComment = async (req, res) => {
     const body = req.body
-
+    
     if (!body) {
         return res.status(400).json({
             success: false,
@@ -50,7 +50,7 @@ updateComment = async (req, res) => {
                 message: 'Comment not found!',
             })
         }
-        comment.body = body.name
+        comment.body = body.body
         comment.time = body.time
         comment
             .save()

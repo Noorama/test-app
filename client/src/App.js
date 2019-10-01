@@ -44,41 +44,65 @@ let Me = () => {
     "You are beautiful! Your mom."
   ]);
 
+  const [copleatList, setCompleatList] = useState([
+  ]);
+
   let newItem = React.createRef();
 
-  function removeBlock(i) {
+  function removeBlock(_id, i) {
     console.log("index " + i + " will die soon!")
-    let arr = [...defaultData];
+    //let arr = [...defaultData];
+    let arr = [...copleatList];
     arr.splice(i, 1);
-    setdefaultData(arr);
+    //setdefaultData(arr);
+    setCompleatList(arr)
+    apis.deleteComment(_id)
   }
 
-  function addNew(e) {
+  async function addNew(e) {
     console.log("A new one is coming!!");
     e.preventDefault();
-    let newArray = [...defaultData, newItem.value]
-    setdefaultData(newArray)
-    console.log("New data: " , newArray);
+    let today = new Date();
+    let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    //let newArray = [...defaultData, newItem.value]
+    //let newArray = [...copleatList, newItem.value]
+    //setCompleatList(newArray)
+    //console.log("New data: ", newArray);
+    const payload = { body: newItem.value, time: date }
+    await apis.createComment(payload)
+    getListCurrent()
+    document.getElementById('SubmitForm').reset();
   }
 
-  function update(e, i) {
+
+
+  function update(e, _id, i) {
     e.preventDefault();
     console.log("Updating..");
     //TODO: change code below to ref
+    let today = new Date();
+    let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     const newValue = e.target.querySelector('input').value;
-    let arr = [...defaultData];
-    arr[i] = newValue;
+    let arr = [...copleatList];
+    arr[i] = {_id:_id, body: newValue, time: date };
     console.log(newValue);
-    setdefaultData(arr);
+    apis.updateComment(_id, {body: newValue, time: date })
+    console.log({body: newValue, time: date });
+    setCompleatList(arr);
+  }
 
-    
-}
+  async function getListCurrent() {
+    const response = await apis.getComments()
+    setCompleatList(response.data.data.map((x) => x))
+    console.log("Data is: ", response.data.data)
+  }
 
-useEffect(async () => {
-  const response = await apis.getComments()
-  setdefaultData(response.data.data.map(({body})=> body)) 
+  useEffect(async () => {
+    const response = await apis.getComments()
+    setCompleatList(response.data.data.map((x) => x))
   }, []
-)
+  )
+console.log(copleatList)
 
   return (
     <div className="RoutingPath">
@@ -86,22 +110,29 @@ useEffect(async () => {
       <AboutSection />
       <Separator text="Some Beautiful Separator. Looking nice, but I dunno what to put here :(" />
       <KnowledgesSection />
-      
+
       <div>
         <div>
           <center><h1>Please share what are you think about me!</h1></center>
         </div>
         <center>
-        <form onSubmit={(e) => {addNew(e)}}>
-          <input type="text" ref={(input) => {newItem = input}} placeholder="Write here!" />
-          <button type="submit">New Comment</button>
-        </form>
+          <form id="SubmitForm" onSubmit={(e) => { addNew(e) }}>
+            <input type="text" ref={(input) => { newItem = input }} placeholder="Write here!" />
+            <button type="submit">New Comment</button>
+          </form>
         </center>
       </div>
       {
+        /*
         defaultData.map((textt, i) => {
           return (
             <CommentsAbout text={textt} index={i} removeBlock={() => removeBlock(i)} update={(e, value) => update(e, i, value)} />
+          );
+        })
+        */
+        copleatList.map(({_id, body }, i) => {
+          return (
+            <CommentsAbout text={body} index={_id} removeBlock={() => removeBlock(_id, i)} update={(e, value) => update(e, _id, i, value)} />
           );
         })
       }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-   baseURL: 'http://localhost:'+process.env.PORT+'/api',
+   baseURL: 'http://localhost:4000/api',
 })
 
 export const createComment = payload => api.post(`/comment`, payload)
