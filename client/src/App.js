@@ -38,23 +38,16 @@ class App extends Component {
 }
 
 let Me = () => {
-  const [defaultData, setdefaultData] = useState([
-    "I dont't like you at all...",
-    "You too tall and this makes me feel uncomfortable myself near you..",
-    "You are beautiful! Your mom."
-  ]);
 
-  const [copleatList, setCompleatList] = useState([
-  ]);
+  const [copleatList, setCompleatList] = useState([]);
+  const [countVisitors, setCountVisitors] = useState();
 
   let newItem = React.createRef();
 
   function removeBlock(_id, i) {
     console.log("index " + i + " will die soon!")
-    //let arr = [...defaultData];
     let arr = [...copleatList];
     arr.splice(i, 1);
-    //setdefaultData(arr);
     setCompleatList(arr)
     apis.deleteComment(_id)
   }
@@ -64,10 +57,6 @@ let Me = () => {
     e.preventDefault();
     let today = new Date();
     let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    //let newArray = [...defaultData, newItem.value]
-    //let newArray = [...copleatList, newItem.value]
-    //setCompleatList(newArray)
-    //console.log("New data: ", newArray);
     const payload = { body: newItem.value, time: date }
     await apis.createComment(payload)
     getListCurrent()
@@ -98,7 +87,10 @@ let Me = () => {
   }
 
   useEffect(async () => {
+    apis.createCount()
+    const count = await apis.getCountSum()
     const response = await apis.getComments()
+    setCountVisitors(count.data.data)
     setCompleatList(response.data.data.map((x) => x))
   }, []
   )
@@ -123,13 +115,6 @@ console.log(copleatList)
         </center>
       </div>
       {
-        /*
-        defaultData.map((textt, i) => {
-          return (
-            <CommentsAbout text={textt} index={i} removeBlock={() => removeBlock(i)} update={(e, value) => update(e, i, value)} />
-          );
-        })
-        */
         copleatList.map(({_id, body }, i) => {
           return (
             <CommentsAbout text={body} index={_id} removeBlock={() => removeBlock(_id, i)} update={(e, value) => update(e, _id, i, value)} />
@@ -138,6 +123,7 @@ console.log(copleatList)
       }
       <div className="moreinfo">
         <b><p>Total Number of records: {copleatList.length}</p></b>
+        <b><p>Total Number of page views: {countVisitors}</p></b>
       </div>
     </div>
   )
@@ -157,27 +143,5 @@ function Knowledges() {
   );
 }
 
-
-/*function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-} 
-*/
 
 export default App;

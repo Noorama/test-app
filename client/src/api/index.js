@@ -10,12 +10,18 @@ export const updateComment = (id, payload) => api.put(`/comment/${id}`, payload)
 export const deleteComment = id => api.delete(`/comment/${id}`)
 export const getCommentById = id => api.get(`/comment/${id}`)
 
+export const createCount = () => api.post(`/count`)
+export const getCountSum = () => api.get(`/count`)
+
+
 const apis = {
     createComment,
     updateComment,
     deleteComment,
     getComments,
     getCommentById,
+    createCount,
+    getCountSum,
 }
 
 export default apis
