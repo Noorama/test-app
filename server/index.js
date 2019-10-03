@@ -4,6 +4,7 @@ const cors = require('cors')
 
 const db = require('./db')
 const commentRouter = require('./routes/comment-router')
+const countRouter = require('./routes/count-router')
 
 const app = express()
 const apiPort = process.env.PORT || 4000
@@ -19,5 +20,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api', commentRouter)
+app.use('/api', countRouter)
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))

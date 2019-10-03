@@ -2,31 +2,39 @@ const Counts = require('../models/count-model')
 
 
 createCount = async (req, res) => {
-    const count = Counts((req.headers['x-forwarded-for'] || '').split(',').pop() || 
+    const headerr = req.connection.remoteAddress
+/*
+    (req.headers['x-forwarded-for'] || '').split(',').pop() || 
     req.connection.remoteAddress || 
     req.socket.remoteAddress || 
-    req.connection.socket.remoteAddress)
+    req.connection.socket.remoteAddress
+*/
 
-    if (!count) {
+    if (!headerr) {
         return res.status(400).json({
             success: false,
             error: 'IP is empty',
         })
     }
 
-    await Counts.findOne({IpInfo: count}, (err) => {
-        if (!err){
+    await Counts.findOne({ IpInfo: headerr }, (err, comment) => {
+        if (comment) {
             return res
+                .status(405)
+                .json({ success: false, error: `The Ip present on the list. Counter wouldn't work.` })
         }
     })
+   const count = new Counts({
+           IpInfo: headerr
+       })
 
-    await count
+    count
     .save()
     .then(() => {
         return res.status(201).json({
             success: true,
-            IpInfo: count,
-            message: 'IP successfully added!',
+            IpInfo: count.IpInfo,
+            message: "Ip Successfully added",
         })
     })
     .catch(error => {
